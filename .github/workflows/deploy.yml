@@ -5,13 +5,11 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
-# Required for GitHub Pages
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# Only one deploy at a time
 concurrency:
   group: "pages"
   cancel-in-progress: true
@@ -20,12 +18,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      # Upload the site files as a Pages artifact (root folder)
-      - uses: actions/upload-pages-artifact@v3
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: . # Change this if your build output folder is "dist" or "build"
 
   deploy:
     runs-on: ubuntu-latest
@@ -34,5 +33,6 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - id: deployment
+      - name: Deploy to GitHub Pages
+        id: deployment
         uses: actions/deploy-pages@v4
